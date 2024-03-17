@@ -37,4 +37,22 @@ export class AuthService {
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
   }
+
+  getUserId(): string {
+    // Assuming you have a user object stored in localStorage after login
+    const userString = localStorage.getItem('user');
+    
+    // Check if userString is not null
+    if (userString !== null) {
+      const user = JSON.parse(userString);
+      
+      // Check if user.id is a string
+      if (typeof user.id === 'string') {
+        return user.id;
+      }
+    }
+    
+    // Return default value if user id is not found
+    return '65f706dca8e3f1b72cf0876f';
+  }
 }

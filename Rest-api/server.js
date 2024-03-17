@@ -3,11 +3,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const User = require('./models/User');
-const cors = require('cors'); // Import cors middleware
+const Book = require('./models/Book');
 
+const cors = require('cors'); // Import cors middleware
+const multer = require('multer'); // Import multer for file uploads
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware
 app.use(cors()); // Enable CORS
@@ -16,6 +21,18 @@ app.use(bodyParser.json());
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/myDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Save uploaded files in the 'uploads' directory
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname); // Use the original filename
+    }
+  });
+  const upload = multer({ storage: storage });
+
+  
 // Routes
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -52,24 +69,32 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/register', async (req, res) => {
-    const { username, password, email } = req.body;
-
+// Get all books
+app.get('/books', async (req, res) => {
     try {
-        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-        if (existingUser) {
-            res.status(400).json({ success: false, message: 'Username or email already exists' });
-            return;
-        }
-
-        const newUser = new User({ username, password, email });
-        await newUser.save();
-        res.status(201).json({ success: true, message: 'User registered successfully' });
+        const books = await Book.find().populate('owner', 'username');
+        res.json(books);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        res.status(500).json({ message: 'Server Error' });
     }
 });
+
+// Add a new book with image upload
+app.post('/books', upload.single('image'), async (req, res) => {
+    const { title, author, description, price, owner } = req.body;
+    const imageUrl = req.file ? req.file.path : ''; // Get the image file path if uploaded
+
+    try {
+        const newBook = new Book({ title, author, description, price, imageUrl, owner });
+        const savedBook = await newBook.save();
+        res.status(201).json(savedBook);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to add book' });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

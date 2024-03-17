@@ -6,14 +6,18 @@ import { RegisterComponent } from './register/register.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
+import { AddBookComponent } from './add-book/add-book.component';
+import { AuthGuard } from './auth.guard';
+import { BookListComponent } from './book-list/book-list.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: BookListComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'about', component: AboutComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'add-book', component: AddBookComponent, canActivate: [AuthGuard] } ,
   { path: '', redirectTo: '/home', pathMatch: 'full' } // Redirect to login page by default
 ];
 
