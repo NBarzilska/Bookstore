@@ -1,0 +1,13 @@
+<!-- navbar.component.html -->
+<nav id="wrapper">
+  <a class="btn" routerLink="/home">Home</a>
+  <ng-container *ngIf="!isAuthenticated; else logoutLinks">
+    <a class="btn" routerLink="/login">Login</a>
+    <a class="btn" routerLink="/register">Register</a>
+  </ng-container>
+  <ng-template #logoutLinks>
+    <a class="btn" routerLink="/logout">Logout</a>
+  </ng-template>
+  <a class="btn" routerLink="/about">About</a>
+  <a class="btn" routerLink="/contact">Contact</a>
+</nav>

@@ -1,0 +1,6 @@
+.content {
+  min-height: calc(100vh - 100px); /* Adjust this value according to your header and footer height */
+  /* Adjust this value according to your footer height */
+  /* Other styles for your main content */
+}
+

@@ -1,0 +1,15 @@
+<!-- register.component.html -->
+<form class="register-form">
+    <h2>Register</h2>
+    <div class="form-group">
+      <input type="text" placeholder="Username" #usernameInput class="form-control">
+    </div>
+    <div class="form-group">
+      <input type="password" placeholder="Password" #passwordInput class="form-control">
+    </div>
+    <div class="form-group">
+      <input type="email" placeholder="Email" #emailInput class="form-control">
+    </div>
+    <button type="button" class="btn btn-primary" (click)="register(usernameInput.value, passwordInput.value, emailInput.value)">Register</button>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </form>

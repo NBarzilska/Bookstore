@@ -1,0 +1,6 @@
+<form class="login-form">
+  <input type="text" placeholder="Username" #usernameInput>
+  <input type="password" placeholder="Password" #passwordInput>
+  <button type="button" (click)="login(usernameInput.value, passwordInput.value)">Login</button>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+</form>
