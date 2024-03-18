@@ -1,25 +1,53 @@
-/* book-list.component.css */
-
 .container {
     margin-top: 20px;
+    max-width: 100%; /* Set a maximum width if needed */
+    float: left;
 }
 
 .list-group-item {
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
-    display: inline-block; /* Display items inline */
-    margin-right: 10px; /* Add some space between items */
     margin-bottom: 10px;
+    position: relative; /* Ensure the position of the buttons is relative to the list item */
+    padding: 15px; /* Add padding to the list item */
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
 }
 
 .spinner-border {
     margin-top: 20px;
-}
-
-/* Center the spinner */
-.spinner-border {
+    /* Center the spinner */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+/* Style for buttons */
+.btn {
+    margin-right: 5px; /* Add space between buttons */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+/* Style for edit button */
+.btn-edit {
+    background-color: #007bff; /* Blue color for edit button */
+    color: white;
+    border-color: #007bff;
+}
+
+/* Style for delete button */
+.btn-delete {
+    background-color: #dc3545; /* Red color for delete button */
+    color: white;
+    border-color: #dc3545;
+}
+
+/* Style for details button */
+.btn-details {
+    background-color: #17a2b8; /* Teal color for details button */
+    color: white;
+    border-color: #17a2b8;
 }

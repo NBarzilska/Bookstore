@@ -1,6 +1,4 @@
-<!-- book-list.component.html -->
 <div *ngIf="books$ | async as books; else loading" class="container">
-  <h2 class="text-center mb-4">All Books</h2>
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <ul class="list-group">
@@ -10,9 +8,14 @@
           <p class="mb-1"><strong>Author:</strong> {{ book.author }}</p>
           <p class="mb-1"><strong>Description:</strong> {{ book.description }}</p>
           <p class="mb-1"><strong>Price:</strong> ${{ book.price }}</p>
-          <p class="mb-0"><strong>Owner:</strong> {{ book.owner.username }}</p>
+          <p class="mb-0"><strong>Owner:</strong> {{ book.owner }}</p>
           <!-- Display the image using the imageUrl provided by the server -->
-         
+          <div class="mt-3">
+            <!-- Buttons for edit, delete, and details -->
+            <button class="btn btn-info" (click)="showDetails(book)">Details</button>
+          </div>
+
+          {{ logBook(book) }}
         </li>
       </ul>
     </div>

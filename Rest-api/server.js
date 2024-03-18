@@ -40,7 +40,7 @@ app.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ username, password });
         if (user) {
-            res.status(200).json({ success: true, message: 'Login successful' });
+            res.status(200).json({ success: true, message: 'Login successful', userId: user.id });
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
@@ -77,6 +77,17 @@ app.get('/books', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+app.get('/books/:id', async (req, res) => {
+    const bookId = req.params.id;
+    const book = await Book.findById(bookId);
+   // console.log(book);
+    if (book) {
+        res.status(200).json(book);
+    } else {
+        res.status(404).json({ message: 'Book not found' });
     }
 });
 

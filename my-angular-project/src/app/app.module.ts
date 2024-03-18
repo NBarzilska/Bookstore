@@ -16,8 +16,11 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { BookListComponent } from './book-list/book-list.component';
 import { AddBookComponent } from './add-book/add-book.component';
-import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { BookDetailsComponent } from './book-details/book-details.component';
+import { BookEditComponent } from './book-edit/book-edit.component';
+import { BookDeleteComponent } from './book-delete/book-delete.component'; // Import ReactiveFormsModule
+import { BookService } from './book.service';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,9 @@ import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsMod
     ContactComponent,
     BookListComponent,
     AddBookComponent,
+    BookDetailsComponent,
+    BookEditComponent,
+    BookDeleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +48,7 @@ import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsMod
     ReactiveFormsModule
   ],
   providers: [
+    BookService
   ],
   bootstrap: [
     AppComponent

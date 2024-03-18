@@ -17,6 +17,7 @@ export class LogoutComponent implements OnInit {
   }
 
   logout() {
+    localStorage.setItem('userId', '');
     // Clear authentication state
     this.authService.setAuthenticated(false);
     // Redirect to the login page or any other desired page

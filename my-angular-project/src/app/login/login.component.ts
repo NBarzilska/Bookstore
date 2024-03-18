@@ -14,8 +14,14 @@ export class LoginComponent {
 
   login(username: string, password: string) {
     this.authService.login(username, password).subscribe(response => {
+      console.log(response);
       if (response.success) {
         console.log('Login successful');
+        const userId = response.userId;
+        console.log('User ID:', userId);
+
+        localStorage.setItem('userId', userId);
+
         this.authService.setAuthenticated(true); // Set authentication state to true
         this.router.navigate(['/home']);
       } else {

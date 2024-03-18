@@ -1,0 +1,22 @@
+/* book-details.component.css */
+
+.container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    margin-bottom: 8px;
+  }
+  
+  strong {
+    font-weight: bold;
+  }
+  

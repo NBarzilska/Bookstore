@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,24 @@ export class AuthService {
     this.isAuthenticatedSubject.next(isAuthenticated);
   }
 
+  // login(username: string, password: string): Observable<any> {
+  //   return this.http.post<any>(`${this.baseUrl}/login`, { username, password });
+  // }
+
+
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, { username, password });
-  }
+    return this.http.post<any>(`${this.baseUrl}/login`, { username, password }).pipe(
+      map(response => {
+        if (response.success) {
+          // If login is successful, return an object containing success status and user ID
+          return { success: true, userId: response.userId };
+        } else {
+          // If login is unsuccessful, return the response as it is
+          return response;
+        }
+      })
+    );
+  };
 
   register(username: string, password: string, email: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/register`, { username, password, email });
@@ -40,19 +56,15 @@ export class AuthService {
 
   getUserId(): string {
     // Assuming you have a user object stored in localStorage after login
-    const userString = localStorage.getItem('user');
+    const userString = localStorage.getItem('userId');
     
     // Check if userString is not null
     if (userString !== null) {
-      const user = JSON.parse(userString);
-      
-      // Check if user.id is a string
-      if (typeof user.id === 'string') {
-        return user.id;
-      }
+      return userString;
     }
     
     // Return default value if user id is not found
-    return '65f706dca8e3f1b72cf0876f';
+    //TODO what to return, not to be hardcoded
+    return '';
   }
 }
