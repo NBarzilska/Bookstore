@@ -1,9 +1,8 @@
-// book-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router'; // Import Router here
-import { AuthService } from '../auth.service'; // Import AuthService here
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 export interface Book {
   _id: string;
@@ -12,7 +11,7 @@ export interface Book {
   description?: string;
   price: number;
   imageUrl?: string;
-  owner: string;
+  owner?: string;
 }
 
 @Component({
@@ -20,29 +19,47 @@ export interface Book {
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.css']
 })
-
 export class BookListComponent implements OnInit {
+  searchTerm: string = '';
   books$!: Observable<Book[]>;
-  isLoggedIn$: boolean = false; // Variable to store user login status
-  userId: string = ''; // Variable to store current user's ID
+  isLoggedIn$: boolean = false;
+  userId: string = '';
+
 
   constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+    this.fetchBooks(); // Load books initially
+    this.isLoggedIn$ = this.authService.isAuthenticated();
+    this.userId = this.authService.getUserId();
+  }
+
+  fetchBooks(): void {
     this.books$ = this.http.get<Book[]>('http://localhost:3000/books');
-    this.isLoggedIn$ = this.authService.isAuthenticated(); // Check user login status
-    this.userId = this.authService.getUserId(); // Get current user's ID
   }
 
   isLoggedIn(): boolean {
-    return this.isLoggedIn$; // Return user login status
+    return this.isLoggedIn$;
   }
-  logBook(book: any) {
+
+  logBook(book: Book) {
     console.log('Logged book:', book);
   }
 
   showDetails(book: Book): void {
-    // Navigate to the details route with book id as parameter
     this.router.navigate(['/books', book._id]);
   }
+
+
+
+  search(): void {
+    if (!this.searchTerm.trim()) {
+      // If search term is empty, reset the list to show all books
+      this.fetchBooks();
+      return;
+    }
+
+    this.books$ = this.http.get<Book[]>(`http://localhost:3000/books/filter?title=${this.searchTerm}`);
+  }
+
 }

@@ -51,3 +51,37 @@
     color: white;
     border-color: #17a2b8;
 }
+
+.parent-container {
+    display: flex;
+    justify-content: center; /* Center the child horizontally */
+    /* Add other styles as needed */
+  }
+
+.search-container {
+    display: flex;
+    align-items: center;
+    margin: 20px; /* Optional: Add margin at the bottom */
+  }
+  
+  input[type="text"] {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    width: 200px; /* Adjust width as needed */
+  }
+  
+  button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

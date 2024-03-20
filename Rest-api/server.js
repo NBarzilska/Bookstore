@@ -80,6 +80,20 @@ app.get('/books', async (req, res) => {
     }
 });
 
+// Filter books by title
+app.get('/books/filter', async (req, res) => {
+    const { title } = req.query;
+    console.log("books filter");
+    try {
+        const books = await Book.find({ title: { $regex: title, $options: 'i' } }).populate('owner', 'username');
+        res.json(books);
+    } catch (error) {
+        console.log("books filter error");
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 app.get('/books/:id', async (req, res) => {
     const bookId = req.params.id;
     const book = await Book.findById(bookId);
@@ -90,6 +104,8 @@ app.get('/books/:id', async (req, res) => {
         res.status(404).json({ message: 'Book not found' });
     }
 });
+
+
 
 // Add a new book with image upload
 app.post('/books', upload.single('image'), async (req, res) => {
