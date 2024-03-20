@@ -13,6 +13,7 @@ import { BookListComponent } from './book-list/book-list.component';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
 import { BookDeleteComponent } from './book-delete/book-delete.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent },
   { path: 'about', component: AboutComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'add-book', component: AddBookComponent, canActivate: [AuthGuard] } ,
   { path: 'books/:id', component: BookDetailsComponent },
   { path: 'books/:id/edit', component: BookEditComponent },

@@ -22,6 +22,7 @@ import { BookEditComponent } from './book-edit/book-edit.component';
 import { BookDeleteComponent } from './book-delete/book-delete.component'; // Import ReactiveFormsModule
 import { BookService } from './book.service';
 import { BookSearchComponent } from './book-search/book-search.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { BookSearchComponent } from './book-search/book-search.component';
     BookEditComponent,
     BookDeleteComponent,
     BookSearchComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -123,6 +123,27 @@ app.post('/books', upload.single('image'), async (req, res) => {
 });
 
 
+app.get('/books/owner/:ownerId', async (req, res) => {
+    const ownerId = req.params.ownerId;
+    // Check if ownerId is provided
+    if (!ownerId) {
+        return res.status(400).json({ message: 'ownerId parameter is required' });
+    }
+
+    // Check if ownerId is a valid ObjectId
+    if (!mongoose.isValidObjectId(ownerId)) {
+        return res.status(400).json({ message: 'Invalid ownerId' });
+    }
+
+    try {
+        const books = await Book.find({ owner: ownerId }).populate('owner', 'username');
+        res.json(books);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

@@ -50,8 +50,6 @@ export class BookListComponent implements OnInit {
     this.router.navigate(['/books', book._id]);
   }
 
-
-
   search(): void {
     if (!this.searchTerm.trim()) {
       // If search term is empty, reset the list to show all books
