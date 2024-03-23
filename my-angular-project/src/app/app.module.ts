@@ -19,7 +19,6 @@ import { AddBookComponent } from './add-book/add-book.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
-import { BookDeleteComponent } from './book-delete/book-delete.component'; // Import ReactiveFormsModule
 import { BookService } from './book.service';
 import { BookSearchComponent } from './book-search/book-search.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -40,7 +39,6 @@ import { ProfileComponent } from './profile/profile.component';
     AddBookComponent,
     BookDetailsComponent,
     BookEditComponent,
-    BookDeleteComponent,
     BookSearchComponent,
     ProfileComponent,
   ],

@@ -24,15 +24,15 @@ mongoose.connect('mongodb://localhost:27017/myDB', { useNewUrlParser: true, useU
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/'); // Save uploaded files in the 'uploads' directory
+        cb(null, 'uploads/'); // Save uploaded files in the 'uploads' directory
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname); // Use the original filename
+        cb(null, file.originalname); // Use the original filename
     }
-  });
-  const upload = multer({ storage: storage });
+});
+const upload = multer({ storage: storage });
 
-  
+
 // Routes
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -97,7 +97,7 @@ app.get('/books/filter', async (req, res) => {
 app.get('/books/:id', async (req, res) => {
     const bookId = req.params.id;
     const book = await Book.findById(bookId);
-   // console.log(book);
+    // console.log(book);
     if (book) {
         res.status(200).json(book);
     } else {
@@ -105,6 +105,17 @@ app.get('/books/:id', async (req, res) => {
     }
 });
 
+//Delete book
+app.delete('/books/:id', async (req, res) => {
+    const bookId = req.params.id;
+    const book = await Book.findByIdAndDelete(bookId);
+    // console.log(book);
+    if (book) {
+        res.status(200).json(book);
+    } else {
+        res.status(404).json({ message: 'Book not found' });
+    }  
+});
 
 
 // Add a new book with image upload
@@ -119,6 +130,32 @@ app.post('/books', upload.single('image'), async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Failed to add book' });
+    }
+});
+
+//Change book 
+app.put('/books/:id', upload.single('image'), async (req, res) => {
+    const bookId = req.params.id;
+    const { title, author, description, price, owner } = req.body;
+    const imageUrl = req.file ? req.file.path : ''; // Get the image file path if uploaded
+
+    try {
+        const updatedBook = await Book.findByIdAndUpdate(bookId, {
+            title,
+            author,
+            description,
+            price,
+            imageUrl,
+            owner
+        }, { new: true }); // Set { new: true } to return the updated document
+        if (updatedBook) {
+            res.status(200).json(updatedBook);
+        } else {
+            res.status(404).json({ message: 'Book not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to update book' });
     }
 });
 

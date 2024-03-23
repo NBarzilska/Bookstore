@@ -39,7 +39,7 @@ export class BookDetailsComponent implements OnInit {
   getUserIdFromLocalStorage(): string {
     const currentUserId = localStorage.getItem('userId');
     console.log(currentUserId);
-    if(currentUserId != null){
+    if (currentUserId != null) {
       return currentUserId;
     } else {
       return '';
@@ -61,10 +61,18 @@ export class BookDetailsComponent implements OnInit {
 
   deleteBook(book: Book): void {
     if (this.isLoggedIn$ && book.owner === this.userId) {
-      // Navigate to the delete route with book id as parameter
-      this.router.navigate(['/books', book._id, 'delete']);
-    } else {
-      // Redirect to login page or display a message for unauthorized access
+      this.bookService.deleteBook(book._id).subscribe(
+        (result) => {
+          console.log(result);
+          // Handle the result here, for example, navigate or perform any other action
+          this.router.navigate(['/home']);
+        },
+        (error) => {
+          console.error('Error deleting book:', error);
+          // Handle error
+        }
+      );} else {
+        console.log('not logged or not owner but still seeing the delete button')
     }
   }
 }
