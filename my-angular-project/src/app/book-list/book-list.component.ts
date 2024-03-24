@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 export interface Book {
   _id: string;
@@ -60,4 +61,16 @@ export class BookListComponent implements OnInit {
     this.books$ = this.http.get<Book[]>(`http://localhost:3000/books/filter?title=${this.searchTerm}`);
   }
 
+  toggleHeart(book: any): void {
+    book.liked = !book.liked; // Toggle the liked state of the book
+  }
+  getUserIdFromLocalStorage(): string {
+    const currentUserId = localStorage.getItem('userId');
+    console.log(currentUserId);
+    if (currentUserId != null) {
+      return currentUserId;
+    } else {
+      return '';
+    };
+  };
 }
