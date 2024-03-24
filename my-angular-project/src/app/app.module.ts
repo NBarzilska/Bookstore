@@ -20,8 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BookDetailsComponent } from './book-details/book-details.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
 import { BookService } from './book.service';
-import { BookSearchComponent } from './book-search/book-search.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ChunkPipe } from './chunk.pipe';
 
 @NgModule({
   declarations: [
@@ -39,8 +39,8 @@ import { ProfileComponent } from './profile/profile.component';
     AddBookComponent,
     BookDetailsComponent,
     BookEditComponent,
-    BookSearchComponent,
     ProfileComponent,
+    ChunkPipe,
   ],
   imports: [
     BrowserModule,

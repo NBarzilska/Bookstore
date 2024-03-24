@@ -1,87 +1,104 @@
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Search container styles */
+.search-container {
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  align-items: center; /* Center items horizontally */
+  margin-bottom: 20px;
+}
+
+.search-container p {
+  font-size: 22px;
+  color: #333;
+  margin-top: 10px;
+}
+
+.search-container input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #999;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  /* Add margin to separate from the paragraph */
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+}
+
+.search-container input[type="text"]:focus {
+  border-color: #0056b3;
+}
+
+.search-container input[type="text"]::placeholder {
+  color: #999;
+}
+
+.search-container input[type="text"]::-webkit-input-placeholder {
+  color: #999;
+}
+
+.search-container input[type="text"]::-moz-placeholder {
+  color: #999;
+}
+
+.search-container input[type="text"]:-ms-input-placeholder {
+  color: #999;
+}
+
+/* Container styles */
 .container {
-    margin-top: 20px;
-    max-width: 100%; /* Set a maximum width if needed */
-    float: left;
+  display: flex;
+  flex-wrap: wrap; /* Ensure items wrap to the next line if there's not enough space */
+  width: 1000px; /* Set a fixed width for the container */
+  margin: 0 auto;
 }
 
 .list-group-item {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.25rem;
-    margin-bottom: 10px;
-    position: relative; /* Ensure the position of the buttons is relative to the list item */
-    padding: 15px; /* Add padding to the list item */
+  flex: 1; /* Allow items to grow and fill available space equally */
+  min-width: 300px; /* Set a minimum width for each item */
+  margin: 10px; /* Add some margin between items */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
 }
 
-.list-group-item:last-child {
-    margin-bottom: 0;
+.list-group-item img {
+  border-radius: 5px;
+  max-width: 100%; 
+  height: 200px; /* Set a fixed height for the images */
+  object-fit: cover; /* Maintain aspect ratio and cover entire container */
+}
+.list-group-item h3 {
+  font-size: 1.5rem;
+  margin-top: 0;
 }
 
-.spinner-border {
-    margin-top: 20px;
-    /* Center the spinner */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.list-group-item p {
+  margin-bottom: 5px;
 }
 
-/* Style for buttons */
-.btn {
-    margin-right: 5px; /* Add space between buttons */
-    cursor: pointer; /* Change cursor to pointer on hover */
+.list-group-item button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 15px;
+  cursor: pointer;
 }
 
-/* Style for edit button */
-.btn-edit {
-    background-color: #007bff; /* Blue color for edit button */
-    color: white;
-    border-color: #007bff;
+.list-group-item button:hover {
+  background-color: #0056b3;
 }
 
-/* Style for delete button */
-.btn-delete {
-    background-color: #dc3545; /* Red color for delete button */
-    color: white;
-    border-color: #dc3545;
-}
-
-/* Style for details button */
-.btn-details {
-    background-color: #17a2b8; /* Teal color for details button */
-    color: white;
-    border-color: #17a2b8;
-}
-
-.parent-container {
-    display: flex;
-    justify-content: center; /* Center the child horizontally */
-    /* Add other styles as needed */
+/* Media query for smaller devices */
+@media (max-width: 768px) {
+  .list-group-item {
+    min-width: calc(50% - 20px); /* Adjust the minimum width for smaller screens */
   }
-
-.search-container {
-    display: flex;
-    align-items: center;
-    margin: 20px; /* Optional: Add margin at the bottom */
-  }
-  
-  input[type="text"] {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-right: 10px;
-    width: 200px; /* Adjust width as needed */
-  }
-  
-  button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+}

@@ -1,22 +1,81 @@
+/* Wrapper styles */
 #wrapper {
-    background-color: hsla(164, 100%, 56%, 0.619);
-    width: 100%;
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .btn {
-    margin: 0 2px;
-    cursor: pointer;
-    padding: 10px;
-    color: black;
-    font-size: 20px;
-    font-weight: bold;
-  }
+  background-color: hsla(164, 100%, 56%, 0.619);
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .item-wrapper {
-    padding: 10px;
-    margin: 5px;
-  }
+/* Button styles */
+.btn {
+  margin: 0 2px;
+  cursor: pointer;
+  padding: 10px;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.3s; /* Add transition for smooth hover effect */
+}
+
+.btn:hover {
+  background-color: rgba(255, 255, 255, 0.5); /* Lighten the background color on hover */
+}
+
+/* Container styles */
+.container {
+  display: flex;
+  flex-wrap: wrap; /* Ensure items wrap to the next line if there's not enough space */
+  width: 1000px; /* Set a fixed width for the container */
+  margin: 0 auto; /* Center the container horizontally */
+}
+
+/* Book item styles */
+.list-group-item {
+  flex: 1; /* Allow items to grow and fill available space equally */
+  min-width: 300px; /* Set a minimum width for each item */
+  margin: 10px; /* Add some margin between items */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  transition: transform 0.3s; /* Add transition for smooth hover effect */
+}
+
+.list-group-item img {
+  border-radius: 5px;
+  max-width: 100%; /* Ensure images don't exceed the container width */
+  height: 200px; /* Set a fixed height for the images */
+  object-fit: cover; /* Maintain aspect ratio and cover entire container */
+}
+
+.list-group-item h3 {
+  font-size: 1.5rem;
+  margin-top: 0;
+}
+
+.list-group-item p {
+  margin-bottom: 5px;
+}
+
+.list-group-item button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Add transition for smooth hover effect */
+}
+
+.list-group-item button:hover {
+  background-color: #0056b3;
+}
+
+/* Hover effect for book items */
+.list-group-item:hover {
+  transform: translateY(-5px); /* Move the item slightly upwards on hover */
+}

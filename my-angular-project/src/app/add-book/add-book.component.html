@@ -5,18 +5,30 @@
     <div class="form-group">
       <label>Title:</label>
       <input type="text" formControlName="title" class="form-control">
+      <div *ngIf="addBookForm.get('title')!.invalid && addBookForm.get('title')!.touched" class="text-danger">
+        Title is required and not bigger than 100 characters!
+      </div>
     </div>
     <div class="form-group">
       <label>Author:</label>
       <input type="text" formControlName="author" class="form-control">
+      <div *ngIf="addBookForm.get('author')!.invalid && addBookForm.get('author')!.touched" class="text-danger">
+        Author is required and not bigger than 50 characters!
+      </div>
     </div>
     <div class="form-group">
       <label>Description:</label>
       <textarea formControlName="description" class="form-control"></textarea>
+      <div *ngIf="addBookForm.get('description')!.invalid && addBookForm.get('description')!.touched" class="text-danger">
+        Description is required and not bigger that 500 characters!
+      </div>
     </div>
     <div class="form-group">
       <label>Price:</label>
       <input type="number" formControlName="price" class="form-control">
+      <div *ngIf="addBookForm.get('price')!.invalid && addBookForm.get('price')!.touched" class="text-danger">
+        Price should not be negative!
+      </div>
     </div>
     <!-- Replace imageUrl input with file input -->
     <div class="form-group">
@@ -24,6 +36,6 @@
       <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control">
     </div>
     <button type="submit" class="btn btn-primary">Add Book</button>
-    <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
   </form>
 </div>

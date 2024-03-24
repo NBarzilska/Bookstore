@@ -19,4 +19,26 @@
   strong {
     font-weight: bold;
   }
+
+/* Button styles */
+.btn {
+  margin-right: 5px;
+  cursor: pointer;
+  padding: 10px 20px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  background-color: #007bff;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.1); /* Add a subtle box shadow */
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s; /* Add transitions for smooth hover effects */
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Darken the background color on hover */
+  transform: translateY(-2px); /* Move the button slightly upwards on hover */
+  box-shadow: 0 6px 10px rgba(0, 123, 255, 0.2); /* Increase the intensity of the box shadow on hover */
+}
+
   

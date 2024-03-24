@@ -1,4 +1,3 @@
-// add-book.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,14 +21,24 @@ export class AddBookComponent {
     private router: Router
   ) {
     this.addBookForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      author: ['', Validators.required],
-      description: [''],
+      title: ['', [Validators.required, Validators.maxLength(100)]], 
+      author: ['', [Validators.required, Validators.maxLength(50)]], 
+      description: ['', [Validators.required,Validators.maxLength(500)]], 
       price: ['', [Validators.required, Validators.min(0)]],
+      // imageUrl: ['',[Validators.required, Validators.minLength(50)]]
     });
   }
 
   onSubmit(): void {
+    console.log('SUBMIT');
+    if (this.addBookForm.invalid) {
+      // Mark all fields as touched to display validation messages
+      Object.values(this.addBookForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
+
     // Create a new FormData object to send data including the image
     const formData = new FormData();
     formData.append('title', this.addBookForm.value.title);
