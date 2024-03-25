@@ -27,7 +27,9 @@
                 <!-- Display buttons for edit, delete, and details -->
                 <div class="mt-3">
                   <button class="btn btn-info" (click)="showDetails(book)">Details</button>
-                  <i *ngIf="getUserIdFromLocalStorage() != book.owner._id" [ngClass]="{'fas': book.liked, 'far': !book.liked}" class="heart-icon fa-heart" (click)="toggleHeart(book)" style="font-size: 30px; color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></i>
+                  <ng-container *ngIf="getUserIdFromLocalStorage() && getUserIdFromLocalStorage() != '' && getUserIdFromLocalStorage() != book.owner._id">
+                    <i [ngClass]="{'fas': book.liked, 'far': !book.liked}" class="heart-icon fa-heart" (click)="toggleHeart(book)" style="font-size: 30px; color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></i>
+                  </ng-container>
                 </div>
                 {{ logBook(book) }}
               </div>

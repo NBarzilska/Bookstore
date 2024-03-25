@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const User = require('./models/User');
 const Book = require('./models/Book');
+const LikedBook = require('./models/LikedBook');
 
 const cors = require('cors'); // Import cors middleware
 const multer = require('multer'); // Import multer for file uploads
@@ -52,7 +53,7 @@ app.post('/login', async (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
-    
+
     try {
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
@@ -72,7 +73,19 @@ app.post('/register', async (req, res) => {
 // Get all books
 app.get('/books', async (req, res) => {
     try {
-        const books = await Book.find().populate('owner', 'username');
+        const userId = req.query.userId; // Get the user ID from the query parameters
+
+        let books = await Book.find().populate('owner', 'username');
+
+        // Only check likes if userId is provided
+        if (userId) {
+            books = await Promise.all(books.map(async (book) => {
+                // Check if the book is liked by the user
+                const isLiked = await LikedBook.exists({ bookId: book._id, ownerId: userId });
+                return { ...book.toObject(), liked: isLiked }; // Include liked status in book object
+            }));
+        }
+
         res.json(books);
     } catch (error) {
         console.error(error);
@@ -80,19 +93,30 @@ app.get('/books', async (req, res) => {
     }
 });
 
+
 // Filter books by title
 app.get('/books/filter', async (req, res) => {
-    const { title } = req.query;
-    console.log("books filter");
+    const { title, userId } = req.query; // Get the title and user ID from the query parameters
+
     try {
-        const books = await Book.find({ title: { $regex: title, $options: 'i' } }).populate('owner', 'username');
+        let books = await Book.find({ title: { $regex: title, $options: 'i' } }).populate('owner', 'username');
+
+        // Only check likes if userId is provided
+        if (userId) {
+            books = await Promise.all(books.map(async (book) => {
+                // Check if the book is liked by the user
+                const isLiked = await LikedBook.exists({ bookId: book._id, ownerId: userId });
+                return { ...book.toObject(), liked: isLiked }; // Include liked status in book object
+            }));
+        }
+
         res.json(books);
     } catch (error) {
-        console.log("books filter error");
         console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
+
 
 app.get('/books/:id', async (req, res) => {
     const bookId = req.params.id;
@@ -114,7 +138,7 @@ app.delete('/books/:id', async (req, res) => {
         res.status(200).json(book);
     } else {
         res.status(404).json({ message: 'Book not found' });
-    }  
+    }
 });
 
 
@@ -178,6 +202,37 @@ app.get('/books/owner/:ownerId', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+//Liked books
+app.put('/likes', async (req, res) => {
+    try {
+        console.log('likes');
+        const { bookId, ownerId, likes } = req.body;
+
+        // Check if the book is already in the liked list
+        const existingLikedBook = await LikedBook.findOne({ bookId, ownerId });
+        //console.log("existingBook" + existingLikedBook);
+
+        if (existingLikedBook) {
+            if (!likes) {
+                // If the book was previously liked but is now unliked, remove it from the liked list
+                await LikedBook.deleteOne({ bookId, ownerId });
+                res.status(200).send("Book removed from liked list.");
+            } else {
+                // If the book is already in the liked list and remains liked, return success
+                res.status(200).send("Book is already liked.");
+            }
+        } else {
+            // If the book is not in the liked list, save it
+            const newLikedBook = new LikedBook({ bookId, ownerId });
+            await newLikedBook.save();
+            res.status(200).send("Book added to liked list successfully.");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating liked status.");
     }
 });
 

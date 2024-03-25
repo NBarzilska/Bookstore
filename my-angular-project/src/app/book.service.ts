@@ -25,4 +25,14 @@ export class BookService {
     editBook(id: string, formData: FormData): Observable<any> {
         return this.http.put<any>(`${this.apiUrl}/books/${id}`, formData);
     }
+
+    likeBook(bookId: string, ownerId: string, likes: boolean) {
+        const body = {
+            bookId: bookId,
+            ownerId: ownerId,
+            likes: likes
+        };
+
+        return this.http.put<any>(`${this.apiUrl}/likes`, body);
+    }
 }
