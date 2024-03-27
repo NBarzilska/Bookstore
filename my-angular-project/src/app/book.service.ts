@@ -1,7 +1,8 @@
 // book.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Book } from './book-list/book-list.component';
 
 @Injectable({
     providedIn: 'root'
@@ -35,4 +36,12 @@ export class BookService {
 
         return this.http.put<any>(`${this.apiUrl}/likes`, body);
     }
-}
+
+    getLikedBooks(userId: string): Observable<Book[]> {
+        // Append the userId as a query parameter
+        const params = new HttpParams().set('userId', userId);
+      
+        return this.http.get<Book[]>(`${this.apiUrl}/likes`, { params });
+      }
+    
+    }

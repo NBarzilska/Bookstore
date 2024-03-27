@@ -236,6 +236,32 @@ app.put('/likes', async (req, res) => {
     }
 });
 
+//Get all liked books in my profile
+app.get('/likes', async (req, res) => {
+    const userId = req.query.userId;
+
+    try {
+        // Find all liked books for the specified userId
+        const likedBooks = await LikedBook.find({ ownerId: userId });
+
+        // Array to store detailed book information
+        const detailedLikedBooks = [];
+
+        // Loop through each liked book
+        for (const likedBook of likedBooks) {
+            // Retrieve detailed book information from the books collection based on the bookId
+            const book = await Book.findById(likedBook.bookId);
+            // Push detailed book information to the result array
+            detailedLikedBooks.push(book);
+        }
+
+        res.json(detailedLikedBooks);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching liked books', error });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
