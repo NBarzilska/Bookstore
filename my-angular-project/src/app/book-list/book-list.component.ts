@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart , faMessage } from '@fortawesome/free-solid-svg-icons';
 import { BookService } from '../book.service';
 
 export interface Book {
@@ -84,6 +84,11 @@ export class BookListComponent implements OnInit {
         // Handle error
       }
     );
+  }
+
+  sendMessage (book: any): void {
+    this.router.navigate(['/sendmessage', book._id, book.owner._id, book.owner.username]);
+
   }
 
 

@@ -22,6 +22,7 @@ import { BookEditComponent } from './book-edit/book-edit.component';
 import { BookService } from './book.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ChunkPipe } from './chunk.pipe';
+import { SendMessageComponent } from './send-message/send-message.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { ChunkPipe } from './chunk.pipe';
     BookEditComponent,
     ProfileComponent,
     ChunkPipe,
+    SendMessageComponent,
   ],
   imports: [
     BrowserModule,

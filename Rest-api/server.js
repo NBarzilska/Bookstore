@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const User = require('./models/User');
 const Book = require('./models/Book');
+const Message = require('./models/Message');
 const LikedBook = require('./models/LikedBook');
 
 const cors = require('cors'); // Import cors middleware
@@ -261,6 +262,28 @@ app.get('/likes', async (req, res) => {
         res.status(500).json({ message: 'Error fetching liked books', error });
     }
 });
+
+app.post('/sendmessage', async (req, res) => {
+    const { sender, receiver, book_id, message, date, seen } = req.body;
+
+    const newMessage = new Message({
+        sender: sender,
+        receiver: receiver,
+        book_id: book_id,
+        message: message,
+      });
+    
+      try {
+        const savedMessage = await newMessage.save();
+        console.log('Message saved:', savedMessage);
+        res.status(201).json(savedMessage);
+      } catch (error) {
+        console.error('Error saving message:', error);
+        res.status(500).json({ success: false, message: 'Failed to send message' });
+
+      }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
