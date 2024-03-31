@@ -1,0 +1,57 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .thread-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .thread {
+    width: 30%;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .thread:hover {
+    transform: translateY(-5px);
+  }
+  
+  .thread-content {
+    cursor: pointer;
+  }
+  
+  .thread-content p {
+    margin: 5px 0;
+  }
+  
+  .thread-content p strong {
+    color: #007bff;
+  }
+  
+  .noThreads {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 18px;
+    color: #999;
+  }
+  
+  .owner-container {
+    background-color: rgb(230, 230, 230);
+  }
+  
+  .other-container {
+    background-color: rgb(181, 239, 181);
+  }
+  

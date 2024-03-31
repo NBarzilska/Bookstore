@@ -1,8 +1,8 @@
 <div class="chat-container">
-    <div class="chat-messages" *ngFor="let message of messages">
-        <div class="message" [class.seen]="message.seen">
-            <div><strong>From:</strong> {{ message.sender }}</div>
-            <div><strong>To:</strong> {{ message.receiver }}</div>
+    <div class="chat-messages">
+        <div class="message" *ngFor="let message of messages" [ngClass]="{'own-message': message.sender === authService.getUserId() , 'other-message': message.sender !== authService.getUserId()}">
+            <div><strong>From:</strong> {{ message.senderUsername }}</div>
+            <div><strong>To:</strong> {{ message.receiverUsername }}</div>
             <div>{{ message.message }}</div>
             <div><small>{{ message.date | date: 'medium' }}</small></div>
         </div>

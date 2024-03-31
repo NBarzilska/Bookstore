@@ -1,0 +1,17 @@
+<div class="container">
+    <h2 class="text-center">My Messages</h2>
+    <div *ngIf="communicationThreads.length > 0; else noThreads" class="thread-container">
+      <div *ngFor="let thread of communicationThreads" class="thread" (click)="openChat(thread)"
+           [ngClass]="{'owner-container': thread.owner === getUserIdFromLocalStorage(), 'other-container': thread.owner !== getUserIdFromLocalStorage()}">
+        <div class="thread-content">
+          <p><strong>Book Title:</strong> {{ thread.bookTitle }}</p>
+          <p><strong>From:</strong> {{ thread.otherPartyUsername }}</p>
+          <p><strong>Last Message:</strong> {{ thread.lastMessage }}</p>
+          <!-- Add any additional information you want to display for each thread -->
+        </div>
+      </div>
+    </div>
+    <ng-template #noThreads>
+      <p class="text-center">No communication threads found.</p>
+    </ng-template>
+  </div>

@@ -14,6 +14,7 @@ import { BookDetailsComponent } from './book-details/book-details.component';
 import { BookEditComponent } from './book-edit/book-edit.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SendMessageComponent } from './send-message/send-message.component';
+import { MyMessagesComponent } from './my-messages/my-messages.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,7 +27,8 @@ const routes: Routes = [
   { path: 'add-book', component: AddBookComponent, canActivate: [AuthGuard] } ,
   { path: 'books/:id', component: BookDetailsComponent },
   { path: 'books/:id/edit', component: BookEditComponent },
-  { path: 'sendmessage/:bookId/:ownerId/:username', component: SendMessageComponent },
+  { path: 'sendmessage', component: SendMessageComponent },
+  { path: 'messages', component: MyMessagesComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' } // Redirect to login page by default
 ];
 

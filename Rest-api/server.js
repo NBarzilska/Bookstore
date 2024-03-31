@@ -11,6 +11,8 @@ const cors = require('cors'); // Import cors middleware
 const multer = require('multer'); // Import multer for file uploads
 const path = require('path');
 
+const { ObjectId } = mongoose.Types;
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -271,17 +273,109 @@ app.post('/sendmessage', async (req, res) => {
         receiver: receiver,
         book_id: book_id,
         message: message,
-      });
-    
-      try {
+    });
+
+    try {
         const savedMessage = await newMessage.save();
         console.log('Message saved:', savedMessage);
         res.status(201).json(savedMessage);
-      } catch (error) {
+    } catch (error) {
         console.error('Error saving message:', error);
         res.status(500).json({ success: false, message: 'Failed to send message' });
 
-      }
+    }
+});
+
+//Get messages for this sender, receiver, book
+app.get('/messages', async (req, res) => {
+    // Access the query parameters
+    const ownerId = req.query.ownerId;
+    const bookId = req.query.bookId;
+    const sender = req.query.sender;
+
+    console.log('Received parameters:', { ownerId, bookId, sender });
+    try {
+        // Assuming your Message schema has 'sender', 'receiver', and 'book_id' fields
+        const messages = await Message.find({
+            $or: [
+                { sender: sender, receiver: ownerId, book_id: bookId },
+                { sender: ownerId, receiver: sender, book_id: bookId } // If you want bidirectional conversation
+            ]
+        }).sort({ 'createdAt': 1 }); // Sorting by creation time, assuming you have a createdAt field
+        
+        for (const message of messages) {
+            const senderUser = await User.findById(message.sender);
+            const receiverUser = await User.findById(message.receiver);
+            message.senderUsername = senderUser ? senderUser.username : 'Unknown';
+            message.receiverUsername = receiverUser ? receiverUser.username : 'Unknown';
+        }
+
+        res.json(messages);
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        res.status(500).json({ success: false, message: 'Failed to get messages' });
+    }
+});
+
+app.get('/mymessages', async (req, res) => {
+    // Extract the user ID from the query parameters
+    const userId = req.query.userId;
+    console.log("User ID:", userId); // Add this line for debugging
+
+    try {
+        const userObjectId = new ObjectId(userId);
+
+        // Find all communication threads where the user is either the sender or the receiver
+        const threads = await Message.aggregate([
+            {
+                $match: {
+                    $or: [
+                        { sender: userObjectId },
+                        { receiver:userObjectId }
+                    ]
+                }
+            },
+            {
+                $group: {
+                    _id: "$book_id",
+                    bookTitle: { $first: "$bookTitle" },
+                    otherParty: {
+                        $first: {
+                            $cond: [
+                                { $eq: ["$sender", userObjectId] },
+                                "$receiver",
+                                "$sender"
+                            ]
+                        }
+                    },
+                    lastMessage: { $last: "$message" }
+                    // Add more fields as needed
+                }
+            }
+        ]);
+        console.log('threads');
+        console.log(threads);
+        // Iterate through the threads and fetch the book information for each thread
+        const populatedThreads = await Promise.all(threads.map(async (thread) => {
+            console.log('thread:');
+            console.log(thread);
+            const book = await Book.findById(thread._id);
+             // Fetch the user information based on the other party's ID
+             const otherUser = await User.findById(thread.otherParty);
+             const otherPartyUsername = otherUser ? otherUser.username : null;
+            return {
+                ...thread,
+                bookTitle: book.title,
+                owner: book.owner,
+                otherPartyUsername: otherPartyUsername,
+            };
+        }));
+
+        res.json(populatedThreads);
+    } catch (error) {
+        console.error('Error fetching communication threads:', error);
+        res.status(500).json({ message: 'Error fetching communication threads' });
+    }
 });
 
 

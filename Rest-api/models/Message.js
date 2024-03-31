@@ -20,6 +20,14 @@ const messageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  senderUsername: {
+    type: String,
+    required: false
+  },
+  receiverUsername: {
+    type: String,
+    required: false
+  },
   date: {
     type: Date,
     default: Date.now // Automatically sets to current date/time

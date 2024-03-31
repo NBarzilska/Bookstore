@@ -6,4 +6,6 @@ export interface Message {
     message: string;
     date: Date | string; // Depending on how you handle dates
     seen: boolean;
+    senderUsername?: string;
+    receiverUsername?: string;
 }

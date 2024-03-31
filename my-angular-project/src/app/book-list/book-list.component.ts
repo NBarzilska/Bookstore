@@ -87,8 +87,16 @@ export class BookListComponent implements OnInit {
   }
 
   sendMessage (book: any): void {
-    this.router.navigate(['/sendmessage', book._id, book.owner._id, book.owner.username]);
-
+    this.router.navigate(['/sendmessage'], {
+      state: {
+        bookId: book._id,
+        owner: book.owner._id,
+       // ownerUsername: book.owner.username,
+       receiver: book.owner._id,
+        sender: this.getUserIdFromLocalStorage()
+      }
+    });
+    
   }
 
 
