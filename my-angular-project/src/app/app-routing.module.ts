@@ -4,8 +4,6 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component'; // Assuming HomeComponent exists
 import { RegisterComponent } from './register/register.component';
 import { LogoutComponent } from './logout/logout.component';
-import { AboutComponent } from './about/about.component';
-import { ContactComponent } from './contact/contact.component';
 import { AddBookComponent } from './add-book/add-book.component';
 import { AuthGuard } from './auth.guard';
 import { BookListComponent } from './book-list/book-list.component';
@@ -15,20 +13,21 @@ import { BookEditComponent } from './book-edit/book-edit.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MyMessagesComponent } from './my-messages/my-messages.component';
+import { ErrorComponent } from './error/error.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: BookListComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'logout', component: LogoutComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'contact', component: ContactComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'add-book', component: AddBookComponent, canActivate: [AuthGuard] } ,
   { path: 'books/:id', component: BookDetailsComponent },
   { path: 'books/:id/edit', component: BookEditComponent },
   { path: 'sendmessage', component: SendMessageComponent },
   { path: 'messages', component: MyMessagesComponent },
+  { path: '**', redirectTo: '/404' },
+  { path: '404', component: ErrorComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' } // Redirect to login page by default
 ];
 

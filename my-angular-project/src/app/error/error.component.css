@@ -1,0 +1,23 @@
+/* error.component.css */
+
+.error-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  @keyframes bounce {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+  }
+  
+  .bouncing-image {
+    animation-name: bounce;
+    animation-duration: 1s;
+    animation-iteration-count: infinite; /* Add this line */
+  }
+  
+  .error-container img {
+    height: 360px; /* Set height to 60px */
+    width: auto; /* Let the width adjust automatically to maintain aspect ratio */
+  }
+ 

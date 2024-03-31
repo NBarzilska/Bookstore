@@ -51,6 +51,10 @@ export class BookListComponent implements OnInit {
     console.log('Logged book:', book);
   }
 
+  logBooks(books: Book[]) {
+    console.log(books);
+  }
+
   showDetails(book: Book): void {
     this.router.navigate(['/books', book._id]);
   }

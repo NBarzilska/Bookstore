@@ -8,7 +8,8 @@
 <div *ngIf="books$ | async as books; else loading" class="container">
   <div class="row">
     <!-- Iterate through books in groups of 2 -->
-    <ng-container *ngFor="let group of books | chunk: 2">
+    <ng-container *ngFor="let group of books | chunk: 1">
+      {{ logBooks(books) }}
       <div class="col-md-6">
         <ul class="list-group">
           <li *ngFor="let book of group" class="list-group-item">
@@ -29,10 +30,8 @@
                   <button class="btn btn-info" (click)="showDetails(book)">Details</button>
                   <ng-container *ngIf="getUserIdFromLocalStorage() && getUserIdFromLocalStorage() != '' && getUserIdFromLocalStorage() != book.owner._id">
                     <i [ngClass]="{'fas': book.liked, 'far': !book.liked}" class="heart-icon fa-heart" (click)="toggleHeart(book)" style="font-size: 30px; color: red; margin-left: 10px; display: inline-block; vertical-align: middle;"></i>
+                    <i class="fas fa-comment" (click)="sendMessage(book)" style="font-size: 30px; color: #007bff; margin-left: 10px; display: inline-block; vertical-align: middle;"></i>
                   </ng-container>
-                  <ng-container *ngIf="getUserIdFromLocalStorage() && getUserIdFromLocalStorage() != '' && getUserIdFromLocalStorage() != book.owner._id">
-                  <i class="fas fa-comment" (click)="sendMessage(book)" style="font-size: 30px; color: blue; margin-left: 10px; display: inline-block; vertical-align: middle;"></i>
-                </ng-container>
                 </div>
                 {{ logBook(book) }}
               </div>
