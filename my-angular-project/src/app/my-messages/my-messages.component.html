@@ -2,7 +2,7 @@
     <h2 class="text-center">My Messages</h2>
     <div *ngIf="communicationThreads.length > 0; else noThreads" class="thread-container">
       <div *ngFor="let thread of communicationThreads" class="thread" (click)="openChat(thread)"
-           [ngClass]="{'owner-container': thread.owner === getUserIdFromLocalStorage(), 'other-container': thread.owner !== getUserIdFromLocalStorage()}">
+           [ngClass]="{'owner-container': thread.owner === this.userId, 'other-container': thread.owner !== this.userId}">
         <div class="thread-content">
           <p><strong>Book Title:</strong> {{ thread.bookTitle }}</p>
           <p><strong>From:</strong> {{ thread.otherPartyUsername }}</p>

@@ -5,7 +5,7 @@ import { HomeComponent } from './home/home.component'; // Assuming HomeComponent
 import { RegisterComponent } from './register/register.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AddBookComponent } from './add-book/add-book.component';
-import { AuthGuard } from './auth.guard';
+import { AuthActivate } from './auth.guard';
 import { BookListComponent } from './book-list/book-list.component';
 
 import { BookDetailsComponent } from './book-details/book-details.component';
@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'add-book', component: AddBookComponent, canActivate: [AuthGuard] } ,
+  { path: 'add-book', component: AddBookComponent, canActivate: [AuthActivate] } ,
   { path: 'books/:id', component: BookDetailsComponent },
   { path: 'books/:id/edit', component: BookEditComponent },
   { path: 'sendmessage', component: SendMessageComponent },

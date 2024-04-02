@@ -19,9 +19,11 @@ export class SendMessageComponent implements OnInit {
   sender!: string;
   receiver!: string;
   otherParty!: string;
+  userId!: string;
 
   constructor(private router: Router, private chatService: ChatService, private route: ActivatedRoute, public authService: AuthService) {
     const navigation = this.router.getCurrentNavigation();
+    this.userId = authService.getUserId();
     const state = navigation?.extras.state as {
       bookId: string;
       owner: string;
@@ -35,7 +37,7 @@ export class SendMessageComponent implements OnInit {
     this.receiver = state?.receiver;
     this.sender = state?.sender;
     //this.username = state?.username;
-    if(this.getUserIdFromLocalStorage() == this.receiver){
+    if(this.userId == this.receiver){
       this.otherParty = this.sender;
     }else{
       this.otherParty = this.receiver;
@@ -71,7 +73,7 @@ export class SendMessageComponent implements OnInit {
   sendMessage(): void {
     if (this.newMessage.trim()) {
       const messageData: Message = {
-        sender: this.getUserIdFromLocalStorage(),
+        sender: this.userId,
         receiver: this.otherParty, 
         book_id: this.bookId, 
         message: this.newMessage,
@@ -91,15 +93,6 @@ export class SendMessageComponent implements OnInit {
     }
   }
 
-  getUserIdFromLocalStorage(): string {
-    const currentUserId = localStorage.getItem('userId');
-    console.log(currentUserId);
-    if (currentUserId != null) {
-      return currentUserId;
-    } else {
-      return '';
-    };
-  };
 }
 
 

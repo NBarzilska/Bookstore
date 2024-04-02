@@ -1,70 +1,109 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subscription, tap , throwError } from 'rxjs';
+//import { map } from 'rxjs/operators';
+import { catchError,  map } from 'rxjs/operators';
+import { UserForAuth } from './user';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private baseUrl = 'http://localhost:3000'; // Your Node.js backend URL
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
+  // private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  // isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  user: UserForAuth | undefined | null;
+  USER_KEY = '[user]';
+
+  private user$$ = new BehaviorSubject<UserForAuth | undefined | null>(null);
+  private user$ = this.user$$.asObservable();
+
+  userSubscription!: Subscription;
 
   constructor(private http: HttpClient) {
-    // Check if the user is authenticated on application initialization
-    this.checkAuthentication();
+    this.userSubscription = this.user$.subscribe((user) => {
+      this.user = user;
+    });
   }
 
-  private checkAuthentication(): void {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    this.isAuthenticatedSubject.next(isAuthenticated);
+
+  login(username: string, password: string) {
+    return this.http
+      .post<UserForAuth>(`${this.baseUrl}/login`, { username, password }, { observe: 'response' })
+      .pipe(
+        map(response => {
+          if (response.status === 200) {
+            // Assuming the response body contains the user data on successful login
+            const user = response.body;
+            this.user$$.next(user); // Update your user state
+            console.log(user);
+            console.log(this.user);
+            console.log(this.user$$);
+            return user; // You might adjust what's returned based on your needs
+          } else {
+            // Handle unexpected status codes as error conditions
+            throw new Error('Login failed due to unexpected server response.');
+          }
+        }),
+        catchError(error => {
+          // Optionally, extract and handle specific error messages from the server response
+          const errorMsg = error.error?.message || 'Login failed. Please check your credentials and try again.';
+          console.error('Login error:', error);
+          return throwError(() => new Error(errorMsg));
+        })
+      );
   }
 
-  // login(username: string, password: string): Observable<any> {
-  //   return this.http.post<any>(`${this.baseUrl}/login`, { username, password });
+  register(username: string, password: string, email: string) {
+    return this.http
+      .post<UserForAuth>(`${this.baseUrl}/register`, { username, password, email })
+      .pipe(
+        tap((user) => this.user$$.next(user)), // Perform side effect
+        catchError((error) => {
+          // Handle error
+          console.error('Registration error:', error);
+          return throwError(error); // Rethrow the error to propagate it to the subscriber
+        })
+      );
+  }
+ 
+  get isLogged(): boolean {
+    return !!this.user;
+  }
+
+  // checkAuthentication(): Observable<any> {
+  //   return this.http.get<any>('/profile').pipe(
+  //     tap(
+  //       () => {
+  //         this.isAuthenticatedSubject.next(true);
+  //       },
+  //       () => {
+  //         this.isAuthenticatedSubject.next(false);
+  //       }
+  //     )
+  //   );
   // }
 
-
-  login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, { username, password }).pipe(
-      map(response => {
-        if (response.success) {
-          // If login is successful, return an object containing success status and user ID
-          return { success: true, userId: response.userId };
-        } else {
-          // If login is unsuccessful, return the response as it is
-          return response;
-        }
-      })
-    );
-  };
-
-  register(username: string, password: string, email: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/register`, { username, password, email });
-  }
-
-  setAuthenticated(isAuthenticated: boolean): void {
-    this.isAuthenticatedSubject.next(isAuthenticated);
-    // Save authentication state to localStorage
-    localStorage.setItem('isAuthenticated', String(isAuthenticated));
-  }
-
-  isAuthenticated(): boolean {
-    return this.isAuthenticatedSubject.value;
+  logout() {
+    console.log('logout');
+    return this.http
+      .post(`/api/logout`, {})
+      .pipe(tap(() => this.user$$.next(undefined)));
   }
 
   getUserId(): string {
-    // Assuming you have a user object stored in localStorage after login
-    const userString = localStorage.getItem('userId');
-    
-    // Check if userString is not null
-    if (userString !== null) {
-      return userString;
-    }
-    
-    // Return default value if user id is not found
-    //TODO what to return, not to be hardcoded
-    return '';
+    return this.user ? this.user._id : '';
+  }
+
+  getProfile() {
+    return this.http
+      .get<UserForAuth>(`/api/profile`)
+      .pipe(tap((user) => this.user$$.next(user)));
+  }
+
+
+    ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   }
 }

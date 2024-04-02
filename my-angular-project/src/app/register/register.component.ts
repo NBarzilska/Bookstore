@@ -66,16 +66,16 @@ export class RegisterComponent {
       return;
     }
 
-    this.authService.register(username, password, email).subscribe(response => {
-      if (response.success) {
-        console.log('Registration successful');
+    this.authService.register(username, password, email).subscribe({
+      next: (response) => {
+        console.log('Registration successful', response);
         this.router.navigate(['/login']);
-      } else {
-        this.errorMessage = response.message;
+      },
+      error: (error) => {
+        console.error('Registration error:', error);
+        // The server response (in case of an error like duplicate entry) will be in error.error
+        this.errorMessage = error.error.message || 'An unexpected error occurred';
       }
-    }, error => {
-      console.error('Registration error:', error);
-      this.errorMessage = error.error.message;
     });
   }
 }

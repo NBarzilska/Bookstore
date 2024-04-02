@@ -52,24 +52,25 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login(username, password).subscribe(response => {
-      console.log(response);
-      if (response.success) {
-        console.log('Login successful');
-        const userId = response.userId;
-        console.log('User ID:', userId);
-
-        localStorage.setItem('userId', userId);
-
-        this.authService.setAuthenticated(true); // Set authentication state to true
-        this.router.navigate(['/home']);
-      } else {
-        console.error('Login failed:', response.message);
-        this.errorMessage = response.message; // Assign error message
+    this.authService.login(username, password).subscribe({
+      next: (response) => {
+        console.log(response);
+        if (response) {
+          console.log('Login successful');
+          const userId = response._id;
+          console.log('User ID:', userId);
+  
+         // localStorage.setItem('userId', userId);
+  
+          this.router.navigate(['/home']);
+        } else {
+          this.errorMessage =  'Unknown error occurred'; // Assign error message
+        }
+      },
+      error: (error) => {
+        console.error('Login error:', error);
+        this.errorMessage = error.error.message || 'Unknown error occurred';
       }
-    }, error => {
-      console.error('Login error:', error);
-      this.errorMessage = error.error.message;
     });
   }
 }

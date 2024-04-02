@@ -8,13 +8,12 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
-  isAuthenticated: boolean;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.isAuthenticated = this.authService.isAuthenticated();
-    this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
-      this.isAuthenticated = isAuthenticated;
-    });
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLogged;
   }
 
   login() {

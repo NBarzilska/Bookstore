@@ -21,7 +21,7 @@ export class BookDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getBookDetails();
-    this.isLoggedIn$ = this.authService.isAuthenticated(); // Check user login status
+    this.isLoggedIn$ = this.authService.isLogged; // Check user login status
     this.userId = this.authService.getUserId(); // Get current user's ID
   }
 
@@ -35,16 +35,6 @@ export class BookDetailsComponent implements OnInit {
       });
     }
   }
-
-  getUserIdFromLocalStorage(): string {
-    const currentUserId = localStorage.getItem('userId');
-    console.log(currentUserId);
-    if (currentUserId != null) {
-      return currentUserId;
-    } else {
-      return '';
-    };
-  };
 
   logBook(book: any) {
     console.log('Logged book:', book);

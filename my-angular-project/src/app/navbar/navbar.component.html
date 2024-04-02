@@ -1,7 +1,7 @@
 <!-- navbar.component.html -->
 <nav id="wrapper">
   <a class="btn" routerLink="/home">Home</a>
-  <ng-container *ngIf="!isAuthenticated; else logoutLinks">
+  <ng-container *ngIf="!isLoggedIn; else logoutLinks">
     <a class="btn" routerLink="/login">Login</a>
     <a class="btn" routerLink="/register">Register</a>
   </ng-container>

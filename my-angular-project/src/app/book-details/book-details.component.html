@@ -6,9 +6,9 @@
   <p><strong>Description:</strong> {{ book.description }}</p>
   <p><strong>Price:</strong> ${{ book.price }}</p>
   <!-- Add any additional details you want to display -->
-  <button *ngIf="getUserIdFromLocalStorage() == book.owner" class="btn btn-primary mr-2"
+  <button *ngIf="this.userId == book.owner" class="btn btn-primary mr-2"
     (click)="editBook(book)">Edit</button>
-  <button *ngIf="getUserIdFromLocalStorage() == book.owner" class="btn btn-danger mr-2"
+  <button *ngIf="this.userId == book.owner" class="btn btn-danger mr-2"
     (click)="deleteBook(book)">Delete</button>
     {{ logBook(book) }}
 </div>

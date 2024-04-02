@@ -1,4 +1,5 @@
-// server.js (Node.js backend)
+global.__basedir = __dirname;
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -10,6 +11,10 @@ const LikedBook = require('./models/LikedBook');
 const cors = require('cors'); // Import cors middleware
 const multer = require('multer'); // Import multer for file uploads
 const path = require('path');
+const config = require('./config/config');
+
+const { auth , jwt, errorHandler} = require('./utils');
+const { authCookieName } = require('./app-config');
 
 const { ObjectId } = mongoose.Types;
 
@@ -18,8 +23,15 @@ const PORT = process.env.PORT || 3000;
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+require('./config/express')(app);
+
 // Middleware
-app.use(cors()); // Enable CORS
+app.use(cors({
+    origin: config.origin,
+    credentials: true
+  }));
+  
+  
 app.use(bodyParser.json());
 
 // Connect to MongoDB
@@ -37,40 +49,96 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
+const bsonToJson = (data) => { return JSON.parse(JSON.stringify(data)) };
+const removePassword = (data) => {
+    const { password, __v, ...userData } = data;
+    return userData
+}
+
 // Routes
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res, next) => {
     const { username, password } = req.body;
 
-    try {
-        const user = await User.findOne({ username, password });
-        if (user) {
-            res.status(200).json({ success: true, message: 'Login successful', userId: user.id });
-        } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+    User.findOne({ username })
+    .then(user => {
+        return Promise.all([user, user ? user.matchPassword(password) : false]);
+    })
+    .then(([user, match]) => {
+            if (!match) {
+                res.status(401)
+                    .send({ message: 'Wrong username or password' });
+                return
+            }
+            user = bsonToJson(user);
+            user = removePassword(user);
+
+            const token = jwt.createToken({ id: user._id });
+            console.log('login Token: ' + token);
+
+            if (process.env.NODE_ENV === 'production') {
+                res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
+            } else {
+                res.cookie(authCookieName, token, { httpOnly: true })
+            }
+            res.status(200)
+                .send(user);
+        })
+        .catch(next);
 });
 
-app.post('/register', async (req, res) => {
+app.get('/profile',auth(), async (req, res, next) => {
+    const { _id: userId } = req.user;
+
+    User.findOne({ _id: userId }, { password: 0, __v: 0 }) //finding by Id and returning without password and __v
+        .then(user => { res.status(200).json(user) })
+        .catch(next);
+});
+
+app.post('/register', async (req, res, next) => {
     const { username, password, email } = req.body;
 
-    try {
-        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-        if (existingUser) {
-            res.status(400).json({ success: false, message: 'Username or email already exists' });
-            return;
-        }
+    User.create({ username, password, email }).then((createdUser) => {
+        createdUser = bsonToJson(createdUser);
+        createdUser = removePassword(createdUser);
 
-        const newUser = new User({ username, password, email });
-        await newUser.save();
-        res.status(201).json({ success: true, message: 'User registered successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+        const token = jwt.createToken({ id: createdUser._id });
+        if (process.env.NODE_ENV === 'production') {
+            res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
+        } else {
+            res.cookie(authCookieName, token, { httpOnly: true })
+        }
+        res.status(200)
+            .send(createdUser);
+    })
+        .catch(err => {
+            if (err.name === 'MongoError' && err.code === 11000) {
+                let field = err.message.split("index: ")[1];
+                field = field.split(" dup key")[0];
+                field = field.substring(0, field.lastIndexOf("_"));
+
+                res.status(409)
+                    .send({ message: `This ${field} is already registered!` });
+                return;
+            }
+            next(err);
+        });
+    // await newUser.save();
+    // res.status(201).json({ success: true, message: 'User registered successfully' });
+
+});
+
+app.post('/logout',auth(), async (req, res) => {
+    console.log("logout");
+    const token = req.cookies[authCookieName];
+    console.log("logout Token: " + token);
+
+    tokenBlacklistModel.create({ token })
+        .then(() => {
+            res.clearCookie(authCookieName)
+                .status(204)
+                .send({ message: 'Logged out!' });
+        })
+        .catch(err => res.send(err));
 });
 
 // Get all books
@@ -133,20 +201,26 @@ app.get('/books/:id', async (req, res) => {
 });
 
 //Delete book
-app.delete('/books/:id', async (req, res) => {
+app.delete('/books/:id', auth(), async (req, res) => {
     const bookId = req.params.id;
-    const book = await Book.findByIdAndDelete(bookId);
-    // console.log(book);
-    if (book) {
-        res.status(200).json(book);
-    } else {
-        res.status(404).json({ message: 'Book not found' });
+    try {
+        const book = await Book.findByIdAndDelete(bookId);
+        // console.log(book);
+        if (book) {
+            res.status(200).json(book);
+        } else {
+            res.status(404).json({ message: 'Book not found' });
+        }
+
+    } catch (error) {
+        // Handle possible errors, such as database errors or issues in the verification process
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
 
 // Add a new book with image upload
-app.post('/books', upload.single('image'), async (req, res) => {
+app.post('/books', auth(), upload.single('image'), async (req, res) => {
     const { title, author, description, price, owner } = req.body;
     const imageUrl = req.file ? req.file.path : ''; // Get the image file path if uploaded
 
@@ -161,7 +235,7 @@ app.post('/books', upload.single('image'), async (req, res) => {
 });
 
 //Change book 
-app.put('/books/:id', upload.single('image'), async (req, res) => {
+app.put('/books/:id', auth(), upload.single('image'), async (req, res) => {
     const bookId = req.params.id;
     const { title, author, description, price, owner } = req.body;
     const imageUrl = req.file ? req.file.path : ''; // Get the image file path if uploaded
@@ -187,7 +261,7 @@ app.put('/books/:id', upload.single('image'), async (req, res) => {
 });
 
 
-app.get('/books/owner/:ownerId', async (req, res) => {
+app.get('/books/owner/:ownerId', auth(), async (req, res) => {
     const ownerId = req.params.ownerId;
     // Check if ownerId is provided
     if (!ownerId) {
@@ -209,7 +283,7 @@ app.get('/books/owner/:ownerId', async (req, res) => {
 });
 
 //Liked books
-app.put('/likes', async (req, res) => {
+app.put('/likes', auth(), async (req, res) => {
     try {
         console.log('likes');
         const { bookId, ownerId, likes } = req.body;
@@ -240,7 +314,7 @@ app.put('/likes', async (req, res) => {
 });
 
 //Get all liked books in my profile
-app.get('/likes', async (req, res) => {
+app.get('/likes', auth(), async (req, res) => {
     const userId = req.query.userId;
 
     try {
@@ -265,7 +339,7 @@ app.get('/likes', async (req, res) => {
     }
 });
 
-app.post('/sendmessage', async (req, res) => {
+app.post('/sendmessage', auth() , async (req, res) => {
     const { sender, receiver, book_id, message, date, seen } = req.body;
 
     const newMessage = new Message({
@@ -287,7 +361,7 @@ app.post('/sendmessage', async (req, res) => {
 });
 
 //Get messages for this sender, receiver, book
-app.get('/messages', async (req, res) => {
+app.get('/messages', auth() , async (req, res) => {
     // Access the query parameters
     const ownerId = req.query.ownerId;
     const bookId = req.query.bookId;
@@ -302,7 +376,7 @@ app.get('/messages', async (req, res) => {
                 { sender: ownerId, receiver: sender, book_id: bookId } // If you want bidirectional conversation
             ]
         }).sort({ 'createdAt': 1 }); // Sorting by creation time, assuming you have a createdAt field
-        
+
         for (const message of messages) {
             const senderUser = await User.findById(message.sender);
             const receiverUser = await User.findById(message.receiver);
@@ -317,7 +391,7 @@ app.get('/messages', async (req, res) => {
     }
 });
 
-app.get('/mymessages', async (req, res) => {
+app.get('/mymessages', auth() , async (req, res) => {
     // Extract the user ID from the query parameters
     const userId = req.query.userId;
     console.log("User ID:", userId); // Add this line for debugging
@@ -331,7 +405,7 @@ app.get('/mymessages', async (req, res) => {
                 $match: {
                     $or: [
                         { sender: userObjectId },
-                        { receiver:userObjectId }
+                        { receiver: userObjectId }
                     ]
                 }
             },
@@ -360,9 +434,9 @@ app.get('/mymessages', async (req, res) => {
             console.log('thread:');
             console.log(thread);
             const book = await Book.findById(thread._id);
-             // Fetch the user information based on the other party's ID
-             const otherUser = await User.findById(thread.otherParty);
-             const otherPartyUsername = otherUser ? otherUser.username : null;
+            // Fetch the user information based on the other party's ID
+            const otherUser = await User.findById(thread.otherParty);
+            const otherPartyUsername = otherUser ? otherUser.username : null;
             return {
                 ...thread,
                 bookTitle: book.title,
@@ -378,6 +452,7 @@ app.get('/mymessages', async (req, res) => {
     }
 });
 
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

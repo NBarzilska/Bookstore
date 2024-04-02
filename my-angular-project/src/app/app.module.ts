@@ -24,6 +24,10 @@ import { ChunkPipe } from './chunk.pipe';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MyMessagesComponent } from './my-messages/my-messages.component';
 import { ErrorComponent } from './error/error.component';
+import { appInterceptorProvider } from './app.interceptor';
+import { AuthenticateComponent} from './authenticate/authenticate.component'
+import { LoaderComponent } from './loader/loader.component';
+
 
 @NgModule({
   declarations: [
@@ -44,6 +48,8 @@ import { ErrorComponent } from './error/error.component';
     SendMessageComponent,
     MyMessagesComponent,
     ErrorComponent,
+    AuthenticateComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,8 +59,11 @@ import { ErrorComponent } from './error/error.component';
     ReactiveFormsModule,
     BrowserAnimationsModule 
   ],
+  exports: [
+    LoaderComponent,
+  ],
   providers: [
-    BookService
+    BookService, appInterceptorProvider
   ],
   bootstrap: [
     AppComponent

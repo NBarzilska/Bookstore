@@ -17,15 +17,15 @@ export class ChatService {
     .set('ownerId', ownerId)
     .set('bookId', bookId)
     .set('sender', sender);
-    return this.http.get<Message[]>(`${this.apiUrl}/messages`, { params: params });
+    return this.http.get<Message[]>(`/api/messages`, { params: params });
   }
 
   sendMessage(message: Message): Observable<Message> {
     console.log(message);
-    return this.http.post<Message>(`${this.apiUrl}/sendmessage`, message);
+    return this.http.post<Message>(`/api/sendmessage`, message);
   }
 
   getMyMessages(userId: string): Observable<CommunicationThread[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/mymessages?userId=${userId}`);
+    return this.http.get<any[]>(`/api/mymessages?userId=${userId}`);
   }
 }
