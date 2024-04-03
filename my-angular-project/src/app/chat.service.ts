@@ -8,7 +8,6 @@ import { CommunicationThread } from './thread.model';
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://localhost:3000'; 
 
   constructor(private http: HttpClient) { }
 

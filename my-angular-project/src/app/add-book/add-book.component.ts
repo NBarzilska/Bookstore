@@ -12,7 +12,7 @@ import { BookService } from '../book.service';
 export class AddBookComponent {
   addBookForm: FormGroup;
   errorMessage!: string;
-  selectedImage: File | null = null; // Property to store the selected image file
+  selectedImage: File | null = null;
 
   constructor(
     private formBuilder: FormBuilder,

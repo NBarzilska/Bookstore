@@ -57,7 +57,7 @@ export class RegisterComponent {
     }
 
     if (isValidPassword != true) {
-      this.errorMessage = 'Password doesn`t fit the requirements. It should be at least 8 charactes long, containing at least 1 small letter, 1 capital letter, 1 special characters and 1 digit!';
+      this.errorMessage = 'Password doesn`t fit the requirements. It should be at least 8 charactes long, containing at least 1 small letter, 1 capital letter, 1 special character and 1 digit!';
       return;
     }
 

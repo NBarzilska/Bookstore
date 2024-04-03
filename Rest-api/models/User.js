@@ -1,4 +1,3 @@
-// models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = Number(process.env.SALTROUNDS) || 5;
@@ -18,7 +17,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  // Add more fields as needed
 }, { timestamps: { createdAt: 'created_at' } });
 
 userSchema.methods = {

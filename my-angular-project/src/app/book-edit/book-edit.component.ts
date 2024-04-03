@@ -26,10 +26,11 @@ export class BookEditComponent implements OnInit {
 
   ) {
     this.editBookForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      author: ['', Validators.required],
-      description: [''],
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      author: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.required, Validators.maxLength(500)]],
       price: ['', [Validators.required, Validators.min(0)]],
+      // imageUrl: ['',[Validators.required, Validators.minLength(50)]]
     });
   }
 
@@ -51,6 +52,14 @@ export class BookEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.editBookForm.invalid) {
+      // Mark all fields as touched to display validation messages
+      Object.values(this.editBookForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      return;
+    }
+
     // Create a new FormData object to send data including the image
     const formData = new FormData();
     formData.append('title', this.editBookForm.value.title);

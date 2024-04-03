@@ -373,20 +373,18 @@ app.post('/sendmessage', auth() , async (req, res) => {
 
 //Get messages for this sender, receiver, book
 app.get('/messages', auth() , async (req, res) => {
-    // Access the query parameters
     const ownerId = req.query.ownerId;
     const bookId = req.query.bookId;
     const sender = req.query.sender;
 
     console.log('Received parameters:', { ownerId, bookId, sender });
     try {
-        // Assuming your Message schema has 'sender', 'receiver', and 'book_id' fields
         const messages = await Message.find({
             $or: [
                 { sender: sender, receiver: ownerId, book_id: bookId },
-                { sender: ownerId, receiver: sender, book_id: bookId } // If you want bidirectional conversation
+                { sender: ownerId, receiver: sender, book_id: bookId } // bidirectional conversation
             ]
-        }).sort({ 'createdAt': 1 }); // Sorting by creation time, assuming you have a createdAt field
+        }).sort({ 'createdAt': 1 }); // Sorting by creation time
 
         for (const message of messages) {
             const senderUser = await User.findById(message.sender);
@@ -403,7 +401,6 @@ app.get('/messages', auth() , async (req, res) => {
 });
 
 app.get('/mymessages', auth() , async (req, res) => {
-    // Extract the user ID from the query parameters
     const userId = req.query.userId;
     console.log("User ID:", userId); // Add this line for debugging
 

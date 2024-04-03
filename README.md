@@ -15,4 +15,5 @@ Prerequisites:
 		b. cd Rest-api
 		c. npm install express mongoose cors multer bcrypt cookie-parser
 		d. node server.js
-			
+	
+Project documentation is available: [Link to documentation](documentation.md)		

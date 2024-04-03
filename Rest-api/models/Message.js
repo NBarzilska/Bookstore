@@ -30,11 +30,11 @@ const messageSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now // Automatically sets to current date/time
+    default: Date.now
   },
   seen: {
     type: Boolean,
-    default: false // Automatically sets to false initially
+    default: false
   }
 });
 

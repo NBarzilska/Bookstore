@@ -1,4 +1,3 @@
-// communicationThread.model.js
 const mongoose = require('mongoose');
 
 const communicationThreadSchema = new mongoose.Schema({

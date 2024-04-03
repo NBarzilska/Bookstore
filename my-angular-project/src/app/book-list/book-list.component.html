@@ -15,17 +15,14 @@
           <li *ngFor="let book of group" class="list-group-item">
             <div class="row">
               <div class="col-md-4">
-                <!-- Display the book image -->
                 <img *ngIf="book.imageUrl" [src]="'http://localhost:3000/' + book.imageUrl" class="img-fluid mt-2" style="width: 1000px;">
               </div>
               <div class="col-md-8">
-                <!-- Display book details -->
                 <h3 class="mb-2">{{ book.title }}</h3>
                 <p class="mb-1"><strong>Author:</strong> {{ book.author }}</p>
                 <p class="mb-1"><strong>Description:</strong> {{ book.description }}</p>
-                <p class="mb-1"><strong>Price:</strong> ${{ book.price }}</p>
+                <p class="mb-1"><strong>Price:</strong> {{ book.price }}lv.</p>
                 <!--<p class="mb-0"><strong>Owner:</strong> {{ book.owner}}</p>-->
-                <!-- Display buttons for edit, delete, and details -->
                 <div class="mt-3">
                   <button class="btn btn-info" (click)="showDetails(book)">Details</button>
                   <ng-container *ngIf="this.userId && this.userId != '' && this.userId != book.owner._id">
