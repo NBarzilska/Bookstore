@@ -6,6 +6,12 @@ import { trigger, keyframes, style, animate, transition } from '@angular/animati
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.css'],
   animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 1 })),
+      ]),
+    ]),
     trigger('bounce', [
       transition(':enter', [
         animate('1s', keyframes([
@@ -37,5 +43,4 @@ export class ErrorComponent implements OnInit {
 
   ngOnInit(): void {}
 
- 
 }

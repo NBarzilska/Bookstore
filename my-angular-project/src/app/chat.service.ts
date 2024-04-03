@@ -26,6 +26,6 @@ export class ChatService {
   }
 
   getMyMessages(userId: string): Observable<CommunicationThread[]> {
-    return this.http.get<any[]>(`/api/mymessages?userId=${userId}`);
+    return this.http.get<CommunicationThread[]>(`/api/mymessages?userId=${userId}`);
   }
 }

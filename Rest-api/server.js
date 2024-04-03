@@ -158,7 +158,7 @@ app.get('/books', async (req, res) => {
             }));
         }
 
-        res.json(books);
+        res.json(books); // Return an array of books
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });
@@ -182,43 +182,28 @@ app.get('/books/filter', async (req, res) => {
             }));
         }
 
-        res.json(books);
+        res.json(books); // Return an array of books
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
 
-
+// Get a book by ID
 app.get('/books/:id', async (req, res) => {
     const bookId = req.params.id;
-    const book = await Book.findById(bookId);
-    // console.log(book);
-    if (book) {
-        res.status(200).json(book);
-    } else {
-        res.status(404).json({ message: 'Book not found' });
-    }
-});
-
-//Delete book
-app.delete('/books/:id', auth(), async (req, res) => {
-    const bookId = req.params.id;
     try {
-        const book = await Book.findByIdAndDelete(bookId);
-        // console.log(book);
+        const book = await Book.findById(bookId);
         if (book) {
-            res.status(200).json(book);
+            res.status(200).json(book); // Return a single book
         } else {
             res.status(404).json({ message: 'Book not found' });
         }
-
     } catch (error) {
-        // Handle possible errors, such as database errors or issues in the verification process
-        res.status(500).json({ message: 'Server error' });
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
     }
 });
-
 
 // Add a new book with image upload
 app.post('/books', auth(), upload.single('image'), async (req, res) => {
@@ -235,13 +220,37 @@ app.post('/books', auth(), upload.single('image'), async (req, res) => {
     }
 });
 
-//Change book 
+// Delete a book by ID
+app.delete('/books/:id', auth(), async (req, res) => {
+    const bookId = req.params.id;
+    try {
+        const book = await Book.findByIdAndDelete(bookId);
+        if (book) {
+            res.status(200).json(book); // Return the deleted book
+        } else {
+            res.status(404).json({ message: 'Book not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// Update a book by ID
 app.put('/books/:id', auth(), upload.single('image'), async (req, res) => {
     const bookId = req.params.id;
     const { title, author, description, price, owner } = req.body;
-    const imageUrl = req.file ? req.file.path : ''; // Get the image file path if uploaded
+    let imageUrl = req.file ? req.file.path : ''; // Get the image file path if uploaded
 
     try {
+        // Fetch the existing book to preserve the old imageUrl
+        const existingBook = await Book.findById(bookId);
+
+        // If no new image is uploaded, retain the old imageUrl
+        if (!req.file && existingBook) {
+            imageUrl = existingBook.imageUrl;
+        }
+
         const updatedBook = await Book.findByIdAndUpdate(bookId, {
             title,
             author,
@@ -250,18 +259,20 @@ app.put('/books/:id', auth(), upload.single('image'), async (req, res) => {
             imageUrl,
             owner
         }, { new: true }); // Set { new: true } to return the updated document
+        
         if (updatedBook) {
-            res.status(200).json(updatedBook);
+            res.status(200).json(updatedBook); // Return the updated book
         } else {
             res.status(404).json({ message: 'Book not found' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Failed to update book' });
+        res.status(500).json({ message: 'Server Error' });
     }
 });
 
 
+// Get books by owner ID
 app.get('/books/owner/:ownerId', auth(), async (req, res) => {
     const ownerId = req.params.ownerId;
     // Check if ownerId is provided
@@ -283,15 +294,13 @@ app.get('/books/owner/:ownerId', auth(), async (req, res) => {
     }
 });
 
-//Liked books
+// Handle book liking/unliking
 app.put('/likes', auth(), async (req, res) => {
     try {
-        console.log('likes');
         const { bookId, ownerId, likes } = req.body;
 
         // Check if the book is already in the liked list
         const existingLikedBook = await LikedBook.findOne({ bookId, ownerId });
-        //console.log("existingBook" + existingLikedBook);
 
         if (existingLikedBook) {
             if (!likes) {
@@ -314,7 +323,7 @@ app.put('/likes', auth(), async (req, res) => {
     }
 });
 
-//Get all liked books in my profile
+// Get liked books by user ID
 app.get('/likes', auth(), async (req, res) => {
     const userId = req.query.userId;
 
@@ -339,6 +348,7 @@ app.get('/likes', auth(), async (req, res) => {
         res.status(500).json({ message: 'Error fetching liked books', error });
     }
 });
+
 
 app.post('/sendmessage', auth() , async (req, res) => {
     const { sender, receiver, book_id, message, date, seen } = req.body;
