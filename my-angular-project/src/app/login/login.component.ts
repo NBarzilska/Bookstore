@@ -64,7 +64,7 @@ export class LoginComponent {
   
           this.router.navigate(['/home']);
         } else {
-          this.errorMessage =  'Unknown error occurred'; // Assign error message
+          this.errorMessage =  'Unknown error occurred';
         }
       },
       error: (error) => {

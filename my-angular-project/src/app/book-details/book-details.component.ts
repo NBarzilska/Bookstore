@@ -14,8 +14,8 @@ import { AuthService } from '../auth.service';
 })
 export class BookDetailsComponent implements OnInit {
   book: Book | undefined;
-  isLoggedIn$: boolean = false; // Variable to store user login status
-  userId: string = ''; // Variable to store current user's ID
+  isLoggedIn$: boolean = false; // store user login status
+  userId: string = ''; // store current user's ID
 
   constructor(private route: ActivatedRoute, private bookService: BookService, private authService: AuthService, private router: Router) { }
 
@@ -42,10 +42,8 @@ export class BookDetailsComponent implements OnInit {
 
   editBook(book: Book): void {
     if (this.isLoggedIn$ && book.owner === this.userId) {
-      // Navigate to the edit route with book id as parameter
       this.router.navigate(['/books', book._id, 'edit']);
     } else {
-      // Redirect to login page or display a message for unauthorized access
     }
   }
 
@@ -54,12 +52,10 @@ export class BookDetailsComponent implements OnInit {
       this.bookService.deleteBook(book._id).subscribe(
         (result) => {
           console.log(result);
-          // Handle the result here, for example, navigate or perform any other action
           this.router.navigate(['/home']);
         },
         (error) => {
           console.error('Error deleting book:', error);
-          // Handle error
         }
       );} else {
         console.log('not logged or not owner but still seeing the delete button')

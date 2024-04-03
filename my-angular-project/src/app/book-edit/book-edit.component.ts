@@ -35,12 +35,11 @@ export class BookEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Get the book ID from the route parameters
     this.route.params.subscribe(params => {
       this.bookId = params['id'];
       // Fetch book information using the bookId and populate the form
       this.bookService.getBookById(this.bookId).subscribe(book => {
-        this.imageUrl = 'http://localhost:3000/' + book.imageUrl; // Store the image URL
+        this.imageUrl = 'http://localhost:3000/' + book.imageUrl; 
         this.editBookForm.patchValue({
           title: book.title,
           author: book.author,
@@ -53,7 +52,6 @@ export class BookEditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.editBookForm.invalid) {
-      // Mark all fields as touched to display validation messages
       Object.values(this.editBookForm.controls).forEach(control => {
         control.markAsTouched();
       });
@@ -71,10 +69,9 @@ export class BookEditComponent implements OnInit {
     }
     formData.append('owner', this.authService.getUserId());
 
-    // Send the form data to the book service
     this.bookService.editBook(this.bookId, formData).subscribe(
       () => {
-        this.router.navigate(['/home']); // Redirect to home page after successfully adding the book
+        this.router.navigate(['/home']);
       },
       error => {
         this.errorMessage = 'Failed to edit book. Please try again.';
@@ -84,17 +81,13 @@ export class BookEditComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
-    // Get the selected file
     const file: File = event.target.files[0];
     if (file) {
       this.selectedImage = file;
-      // Create a FileReader object to read the file
       const reader = new FileReader();
       reader.onload = () => {
-        // Set the image URL to the result of the FileReader
         this.imageUrl = reader.result as string;
       };
-      // Read the selected file as a data URL
       reader.readAsDataURL(file);
     }
   }

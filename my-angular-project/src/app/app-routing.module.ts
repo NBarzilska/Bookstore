@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component'; // Assuming HomeComponent exists
+import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AddBookComponent } from './add-book/add-book.component';
@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'messages', component: MyMessagesComponent },
   { path: '**', redirectTo: '/404' },
   { path: '404', component: ErrorComponent},
-  { path: '', redirectTo: '/home', pathMatch: 'full' } // Redirect to login page by default
+  { path: '', redirectTo: '/home', pathMatch: 'full' } 
 ];
 
 @NgModule({

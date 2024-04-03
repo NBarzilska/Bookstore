@@ -50,15 +50,11 @@ export class SendMessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
- 
-
     this.loadMessages();
   }
 
   loadMessages(): void {
     // Fetch messages using ChatService
-    // The fetched data should match the Message interface structure
     this.chatService.getMessages(this.owner,this.bookId, this.sender).subscribe(
       (data: Message[]) => {
         this.messages = data;
@@ -84,7 +80,7 @@ export class SendMessageComponent implements OnInit {
       this.chatService.sendMessage(messageData).subscribe(
         () => {
           this.newMessage = '';
-          this.loadMessages(); // Reload messages to display the new one
+          this.loadMessages();
         },
         error => {
           console.error("Failed to send message", error);

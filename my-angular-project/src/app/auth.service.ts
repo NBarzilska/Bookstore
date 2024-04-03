@@ -9,7 +9,7 @@ import { UserForAuth } from './user';
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
-  private baseUrl = 'http://localhost:3000'; // Your Node.js backend URL
+  private baseUrl = 'http://localhost:3000';
   // private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   // isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
@@ -34,20 +34,17 @@ export class AuthService implements OnDestroy {
       .pipe(
         map(response => {
           if (response.status === 200) {
-            // Assuming the response body contains the user data on successful login
             const user = response.body;
-            this.user$$.next(user); // Update your user state
+            this.user$$.next(user); 
             console.log(user);
             console.log(this.user);
             console.log(this.user$$);
-            return user; // You might adjust what's returned based on your needs
+            return user; 
           } else {
-            // Handle unexpected status codes as error conditions
             throw new Error('Login failed due to unexpected server response.');
           }
         }),
         catchError(error => {
-          // Optionally, extract and handle specific error messages from the server response
           const errorMsg = error.error?.message || 'Login failed. Please check your credentials and try again.';
           console.error('Login error:', error);
           return throwError(() => new Error(errorMsg));
@@ -59,11 +56,10 @@ export class AuthService implements OnDestroy {
     return this.http
       .post<UserForAuth>(`${this.baseUrl}/register`, { username, password, email })
       .pipe(
-        tap((user) => this.user$$.next(user)), // Perform side effect
+        tap((user) => this.user$$.next(user)), 
         catchError((error) => {
-          // Handle error
           console.error('Registration error:', error);
-          return throwError(error); // Rethrow the error to propagate it to the subscriber
+          return throwError(error); 
         })
       );
   }
@@ -97,8 +93,7 @@ export class AuthService implements OnDestroy {
       .get<UserForAuth>(`/api/profile`)
       .pipe(tap((user) => this.user$$.next(user)));
   }
-
-
+  
     ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
   }

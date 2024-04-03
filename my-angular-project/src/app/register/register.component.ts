@@ -1,4 +1,3 @@
-// register.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
@@ -73,7 +72,6 @@ export class RegisterComponent {
       },
       error: (error) => {
         console.error('Registration error:', error);
-        // The server response (in case of an error like duplicate entry) will be in error.error
         this.errorMessage = error.error.message || 'An unexpected error occurred';
       }
     });

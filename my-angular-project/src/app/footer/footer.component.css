@@ -1,29 +1,26 @@
-/* Footer Styles */
 footer {
-  background-color: #333; /* Dark background color */
-  color: #fff; /* White text color */
-  height: 50px; /* Footer height */
-  width: 100%; /* Full width */
-  position: fixed; /* Fix the footer at the bottom */
-  bottom: 0; /* Stick the footer to the bottom of the viewport */
-  text-align: center; /* Center-align content within the footer */
-  display: flex; /* Use flexbox */
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
-  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3); /* Add shadow */
+  background-color: #333;
+  color: #fff; 
+  height: 50px; 
+  width: 100%; 
+  position: fixed; 
+  bottom: 0; 
+  text-align: center; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
 }
 
-/* Style for footer text */
 footer span {
-  font-size: 1.5em; /* Large font size */
+  font-size: 1.5em; 
 }
 
-/* Additional style for footer information */
 footer div {
-  margin: 15px; /* Spacing around footer content */
-  padding: 5px; /* Padding for footer content */
-  font-size: 0.9em; /* Slightly smaller font size */
-  border-radius: 5px; /* Rounded corners */
-  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  margin: 15px; 
+  padding: 5px; 
+  font-size: 0.9em; 
+  border-radius: 5px; 
+  background-color: rgba(255, 255, 255, 0.1); 
 }
 

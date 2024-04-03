@@ -1,9 +1,9 @@
 export interface CommunicationThread {
-    _id: string; // book ID
+    _id: string;
     bookTitle: string;
     owner: string;
-    otherParty: string; // User ID of the other party
-    lastMessage: string; // Last message in the thread
+    otherParty: string; 
+    lastMessage: string;
     otherPartyUsername:string;
   }
   

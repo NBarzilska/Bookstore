@@ -19,7 +19,6 @@ export class ProfileComponent implements OnInit {
   constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private router: Router) { }
 
   ngOnInit(): void {
-    // Add any initialization logic here
     const userId = this.authService.getUserId();
     this.books$ = this.http.get<Book[]>(`http://localhost:3000/books/owner/${userId}`);
 
@@ -29,7 +28,7 @@ export class ProfileComponent implements OnInit {
   showDetails(book: Book): void {
     this.router.navigate(['/books', book._id]);
   }
-  
+
   logBook(book: Book) {
     console.log('Logged book:', book);
   }

@@ -4,16 +4,13 @@
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div class="row">
-        <!-- Loop through each book and create a column for each one -->
         <div class="col-md-6" *ngFor="let book of books">
-          <div class="list-group mb-3"> <!-- Added mb-3 for some spacing between items -->
+          <div class="list-group mb-3"> 
             <div class="list-group-item">
-              <div class="row"> <!-- New row for image and text content -->
-                <!-- Column for the image -->
+              <div class="row"> 
                 <div class="col-md-5">
                   <img *ngIf="book.imageUrl" [src]="'http://localhost:3000/' + book.imageUrl" class="img-fluid" style="max-width: 100%; height: auto;">
                 </div>
-                <!-- Column for the text -->
                 <div class="col-md-7">
                   <h3 class="mb-2">{{ book.title }}</h3>
                   <p class="mb-1"><strong>Author:</strong> {{ book.author }}</p>
@@ -39,16 +36,13 @@
     <div class="row justify-content-center">
       <div class="col-md-10">
         <div class="row">
-          <!-- Loop through each book and create a column for each one -->
           <div class="col-md-6" *ngFor="let book of likedBooks">
-            <div class="list-group mb-3"> <!-- Added mb-3 for some spacing between items -->
+            <div class="list-group mb-3"> 
               <div class="list-group-item">
-                <div class="row"> <!-- New row for image and text content -->
-                  <!-- Column for the image -->
+                <div class="row">
                   <div class="col-md-5">
                     <img *ngIf="book.imageUrl" [src]="'http://localhost:3000/' + book.imageUrl" class="img-fluid" style="max-width: 100%; height: auto;">
                   </div>
-                  <!-- Column for the text -->
                   <div class="col-md-7">
                     <h3 class="mb-2">{{ book.title }}</h3>
                     <p class="mb-1"><strong>Author:</strong> {{ book.author }}</p>

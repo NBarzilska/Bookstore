@@ -70,14 +70,12 @@ export class BookListComponent implements OnInit, OnDestroy  {
   }
 
   search(): void {
-    // Trim the search term and check if it's empty
     if (!this.searchTerm.trim()) {
       // If search term is empty, reset the list to show all books
       this.fetchBooks();
       return;
     }
   
-    // Construct the URL with the search term, and include the userId query parameter if it exists
     const url = this.userId ? `http://localhost:3000/books/filter?title=${this.searchTerm}&userId=${this.userId}` : `http://localhost:3000/books/filter?title=${this.searchTerm}`;
     this.books$ = this.http.get<Book[]>(url);
   }
@@ -88,13 +86,10 @@ export class BookListComponent implements OnInit, OnDestroy  {
 
     this.bookService.likeBook(book._id, this.userId, book.liked).subscribe(
       (result) => {
-        console.log(result);
-        // Handle the result here, for example, navigate or perform any other action
-       
+        console.log(result);       
       },
       (error) => {
         console.error('Error during like:', error);
-        // Handle error
       }
     );
   }

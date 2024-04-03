@@ -32,7 +32,6 @@ export class AddBookComponent {
   onSubmit(): void {
     console.log('SUBMIT');
     if (this.addBookForm.invalid) {
-      // Mark all fields as touched to display validation messages
       Object.values(this.addBookForm.controls).forEach(control => {
         control.markAsTouched();
       });

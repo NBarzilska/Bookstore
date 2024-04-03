@@ -38,7 +38,6 @@ export class BookService {
     }
 
     getLikedBooks(userId: string): Observable<Book[]> {
-        // Append the userId as a query parameter
         const params = new HttpParams().set('userId', userId);
 
         return this.http.get<Book[]>(`/api/likes`, { params });
