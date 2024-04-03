@@ -7,6 +7,7 @@ const User = require('./models/User');
 const Book = require('./models/Book');
 const Message = require('./models/Message');
 const LikedBook = require('./models/LikedBook');
+const tokenBlacklistModel = require('./models/tokenBlacklistModel');
 
 const cors = require('cors'); // Import cors middleware
 const multer = require('multer'); // Import multer for file uploads

@@ -17,11 +17,21 @@ export class LogoutComponent implements OnInit {
   }
 
   logout() {
-    localStorage.setItem('userId', '');
+    console.log("logout component");
+   // localStorage.setItem('userId', '');
     // Clear authentication state
-    this.authService.logout();
-    // Redirect to the login page or any other desired page
-    this.router.navigate(['/home']);
+    this.authService.logout().subscribe({
+      next: (response) => {
+        // Handle successful logout
+        console.log('Logged out successfully', response);
+        this.router.navigate(['/home']);
+
+      },
+      error: (error) => {
+        // Handle error on logout
+        console.error('Logout failed', error);
+      }
+    });
   }
 
 }

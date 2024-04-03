@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable , Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { faHeart , faMessage } from '@fortawesome/free-solid-svg-icons';
@@ -22,20 +22,32 @@ export interface Book {
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.css']
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, OnDestroy  {
   searchTerm: string = '';
   books$!: Observable<Book[]>;
-  isLoggedIn$: boolean = false;
+  isLoggedIn: boolean = false;
   userId: string = '';
 
+  private authStatusSub!: Subscription;
 
   constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private router: Router) { }
 
   ngOnInit(): void {
-   ; // Load books initially
-    this.isLoggedIn$ = this.authService.isLogged;
-    this.userId = this.authService.getUserId();
-    this.fetchBooks();
+    this.authStatusSub = this.authService.isAuthenticated().subscribe(isAuthenticated => {
+      this.isLoggedIn = isAuthenticated;
+      if (isAuthenticated) {
+        this.userId = this.authService.getUserId();
+        this.fetchBooks();
+      }else{
+        this.fetchBooks();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.authStatusSub) {
+      this.authStatusSub.unsubscribe(); // Unsubscribe from authentication status subscription
+    }
   }
 
   fetchBooks(): void {
@@ -44,9 +56,6 @@ export class BookListComponent implements OnInit {
     this.books$ = this.http.get<Book[]>(url);
   }
 
-  isLoggedIn(): boolean {
-    return this.isLoggedIn$;
-  }
 
   logBook(book: Book) {
     console.log('Logged book:', book);
@@ -103,14 +112,4 @@ export class BookListComponent implements OnInit {
     
   }
 
-
-//   getUserIdFromLocalStorage(): string {
-//     const currentUserId = localStorage.getItem('userId');
-//     console.log(currentUserId);
-//     if (currentUserId != null) {
-//       return currentUserId;
-//     } else {
-//       return '';
-//     };
-//   };
  }

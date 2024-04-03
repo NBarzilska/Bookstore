@@ -72,21 +72,16 @@ export class AuthService implements OnDestroy {
     return !!this.user;
   }
 
-  // checkAuthentication(): Observable<any> {
-  //   return this.http.get<any>('/profile').pipe(
-  //     tap(
-  //       () => {
-  //         this.isAuthenticatedSubject.next(true);
-  //       },
-  //       () => {
-  //         this.isAuthenticatedSubject.next(false);
-  //       }
-  //     )
-  //   );
-  // }
+  
+
+  isAuthenticated(): Observable<boolean> {
+    return this.user$$.asObservable().pipe(
+      map(user => !!user) // Convert user object presence to a boolean
+    );
+  }
 
   logout() {
-    console.log('logout');
+    console.log('logout service');
     return this.http
       .post(`/api/logout`, {})
       .pipe(tap(() => this.user$$.next(undefined)));
@@ -97,6 +92,7 @@ export class AuthService implements OnDestroy {
   }
 
   getProfile() {
+    console.log("getProfile");
     return this.http
       .get<UserForAuth>(`/api/profile`)
       .pipe(tap((user) => this.user$$.next(user)));
